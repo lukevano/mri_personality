@@ -9,8 +9,8 @@ def get_data():
 
 def clean_data(df):
     
-    # Specify collumns to remove
-    to_remove = to_remove = ['eTIV.1', 'EstimatedTotalIntraCranialVol', 'BrainSegVolNotVent.2',
+    # Specify columns to remove
+    to_remove = ['eTIV.1', 'EstimatedTotalIntraCranialVol', 'BrainSegVolNotVent.2',
     'BrainSegVolNotVent.1', 'BrainSegVolNotVentSurf', 'SupraTentorialVolNotVentVox',
     'lhCerebralWhiteMatterVol', 'rhCerebralWhiteMatterVol', 'BrainSegVolNotVent.2', 
     'BrainSegVol', 'SupraTentorialVol', 'SupraTentorialVolNotVent',
@@ -20,6 +20,7 @@ def clean_data(df):
     
     # Drop the identical columns
     drop_col_df = df.drop(columns=to_remove)
+    # Drop the row with nan in NEO_C
     cleaned_df = drop_col_df[drop_col_df.NEO_C.notnull()].reset_index(drop=True)
     
     # Remove the row with no sex data

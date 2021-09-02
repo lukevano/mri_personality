@@ -1,4 +1,5 @@
 from data import *
+from termcolor import colored
 import pandas as pd
 import statsmodels.api as sm
 from sklearn.cluster import KMeans
@@ -31,7 +32,7 @@ class Trainer(object):
         self.X_m_scaled_int = pd.DataFrame(X_m_scaled_int, 
                                         columns=pd.Index(['const']).append(self.X_f.columns))
         
-        # Target creation- first 
+        # Target creation- first select target columns
         self.y_sex = self.sex_df.iloc[:, 6:11]
         
         # Use KMeans clustering to generate new targets- create the model
@@ -59,6 +60,28 @@ class Trainer(object):
         self.results_f_knn_2 = sm.Logit(self.y_f_knn==2, self.X_f_scaled_int).fit(maxiter=100)
         self.results_f_knn_3 = sm.Logit(self.y_f_knn==3, self.X_f_scaled_int).fit(maxiter=100)
         self.results_f_knn_4 = sm.Logit(self.y_f_knn==4, self.X_f_scaled_int).fit(maxiter=100)
+        self.results_m_knn_0 = sm.Logit(self.y_m_knn==0, self.X_m_scaled_int).fit(maxiter=100)
+        self.results_m_knn_1 = sm.Logit(self.y_m_knn==1, self.X_m_scaled_int).fit(maxiter=100)
+        self.results_m_knn_2 = sm.Logit(self.y_m_knn==2, self.X_m_scaled_int).fit(maxiter=100)
+        self.results_m_knn_3 = sm.Logit(self.y_m_knn==3, self.X_m_scaled_int).fit(maxiter=100)
+        self.results_m_knn_4 = sm.Logit(self.y_m_knn==4, self.X_m_scaled_int).fit(maxiter=100)
+        
+    def save_model_locally(self):
+        
+        # Save a model for each KNN cluster locally
+        self.results_f_knn_0.save("f_knn_0.pickle")
+        self.results_f_knn_1.save("f_knn_1.pickle")
+        self.results_f_knn_2.save("f_knn_2.pickle")
+        self.results_f_knn_3.save("f_knn_3.pickle")
+        self.results_f_knn_4.save("f_knn_4.pickle")
+        self.results_m_knn_0.save("m_knn_0.pickle")
+        self.results_m_knn_1.save("m_knn_1.pickle")
+        self.results_m_knn_2.save("m_knn_2.pickle")
+        self.results_m_knn_3.save("m_knn_3.pickle")
+        self.results_m_knn_4.save("m_knn_4.pickle")
+        
+        print(colored("model.pickle saved locally", "green"))
+        
         
 if __name__ == "__main__":
     
@@ -67,4 +90,9 @@ if __name__ == "__main__":
     X_f, X_m, neo_f, neo_m, sex_df = clean_data(df)
     trainer = Trainer(X_f, X_m, neo_f, neo_m, sex_df)
     trainer.preprocessing()
+    
+    # Train and run the models
     trainer.run()
+    
+    # Save the models
+    trainer.save_model_locally()
