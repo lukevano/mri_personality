@@ -1,4 +1,36 @@
 # ----------------------------------
+#          MAKE DATA BUCKET
+# ----------------------------------
+
+# Path to local file
+LOCAL_PATH=/Users/DrV/code/lukevano/mri_personality/mri_personality/data/master_combined.xlsx
+
+# GCP project id
+PROJECT_ID=mri-personality
+
+# Bucket name - replace with your GCP bucket name
+BUCKET_NAME=mri-personality-bucket
+
+# Bucket directory
+BUCKET_FOLDER=data
+
+# Choose region from https://cloud.google.com/storage/docs/locations#available_locations
+REGION=europe-west1
+
+# The name you want the file to have in the bucket
+BUCKET_FILE_NAME=$(shell basename ${LOCAL_PATH})
+
+set_project:
+	-@gcloud config set project ${PROJECT_ID}
+
+create_bucket:
+	-@gsutil mb -l ${REGION} -p ${PROJECT_ID} gs://${BUCKET_NAME}
+
+upload_data:
+	-@gsutil cp ${LOCAL_PATH} gs://${BUCKET_NAME}/${BUCKET_FOLDER}/${BUCKET_FILE_NAME}
+
+
+# ----------------------------------
 #          INSTALL & TEST
 # ----------------------------------
 install_requirements:
