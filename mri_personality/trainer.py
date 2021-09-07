@@ -4,6 +4,7 @@ import pandas as pd
 import statsmodels.api as sm
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
+from data import get_data, clean_data
 
 class Trainer(object):
     
