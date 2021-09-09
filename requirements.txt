@@ -21,6 +21,7 @@ gcsfs
 google-cloud-storage
 mlflow
 s3fs
+streamlit
 
 # utilities
 six>=1.14
