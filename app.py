@@ -1,4 +1,5 @@
 from mri_personality.data import clean_data
+from sklearn.preprocessing import StandardScaler
 import streamlit as st
 import pandas as pd
 import pickle
@@ -47,6 +48,8 @@ st.text('')
 
 st.markdown('**Check out your prediction!**')
 
+scaler = StandardScaler()
+
 if uploaded_csv!=None:
     f_knn_0=pickle.load(open('mri_personality/f_knn_0.pickle', 'rb'))
     f_knn_1=pickle.load(open('mri_personality/f_knn_1.pickle', 'rb'))
@@ -70,14 +73,53 @@ if uploaded_csv!=None:
     'BrainSegVol-to-eTIV', 'MaskVol', 'rhCortexVol', 'lhCortexVol', 'Left-WM-hypointensities',
     'Right-WM-hypointensities', 'non-WM-hypointensities', 'Left-non-WM-hypointensities',
     'Right-non-WM-hypointensities'],axis=1,inplace=True)
+        uploaded_df=scaler.fit_transform(uploaded_df)
         uploaded_df=sm.add_constant(uploaded_df)
         m_knn_0_results=m_knn_0.predict(uploaded_df.iloc[4,:].values.T.reshape(1,-1))
-    #f_knn_0_results=f_knn_0.predict(uploaded_df)
-    #f_knn_2_results=f_knn_2.predict(uploaded_df)
-    #f_knn_1_results=f_knn_1.predict(uploaded_df)    
-    #f_knn_3_results=f_knn_3.predict(uploaded_df)
-    #f_knn_4_results=f_knn_4.predict(uploaded_df)
+        m_knn_1_results=m_knn_1.predict(uploaded_df.iloc[4,:].values.T.reshape(1,-1))
+        m_knn_2_results=m_knn_2.predict(uploaded_df.iloc[4,:].values.T.reshape(1,-1))
+        m_knn_3_results=m_knn_3.predict(uploaded_df.iloc[4,:].values.T.reshape(1,-1))
+        m_knn_4_results=m_knn_4.predict(uploaded_df.iloc[4,:].values.T.reshape(1,-1))
+        
+        # This is the proba that they fall in each category
+        m_knn_proba = pd.DataFrame({'Leader': m_knn_0_results,
+                            'Task orientatied': m_knn_1_results,
+                            'Maverick': m_knn_2_results,
+                            'Anxious': m_knn_3_results,
+                            'Workaholic': m_knn_4_results})
+        
+        # This is the category they are highest in
+        print(np.argmax(m_knn_proba.values, axis = 1))
+
         st.text(m_knn_0_results)
+        
+    if sex == 'Female':
+        #uploaded_df=uploaded_df[uploaded_df['sex']=='']
+        uploaded_df.drop(['participant_id','age','sex','BMI','handedness','education_category','NEO_N','NEO_E','NEO_O','NEO_A',
+                          'NEO_C','eTIV.1', 'EstimatedTotalIntraCranialVol', 'BrainSegVolNotVent.2',
+                         'BrainSegVolNotVent.1', 'BrainSegVolNotVentSurf', 'SupraTentorialVolNotVentVox',
+    'lhCerebralWhiteMatterVol', 'rhCerebralWhiteMatterVol', 'BrainSegVolNotVent.2', 
+    'BrainSegVol', 'SupraTentorialVol', 'SupraTentorialVolNotVent',
+    'BrainSegVol-to-eTIV', 'MaskVol', 'rhCortexVol', 'lhCortexVol', 'Left-WM-hypointensities',
+    'Right-WM-hypointensities', 'non-WM-hypointensities', 'Left-non-WM-hypointensities',
+    'Right-non-WM-hypointensities'],axis=1,inplace=True)
+        uploaded_df=scaler.fit_transform(uploaded_df)
+        uploaded_df=sm.add_constant(uploaded_df)
+        f_knn_0_results=f_knn_0.predict(uploaded_df.iloc[4,:].values.T.reshape(1,-1))
+        f_knn_1_results=f_knn_1.predict(uploaded_df.iloc[4,:].values.T.reshape(1,-1))
+        f_knn_2_results=f_knn_2.predict(uploaded_df.iloc[4,:].values.T.reshape(1,-1))
+        f_knn_3_results=f_knn_3.predict(uploaded_df.iloc[4,:].values.T.reshape(1,-1))
+        f_knn_4_results=f_knn_4.predict(uploaded_df.iloc[4,:].values.T.reshape(1,-1))
+
+        # This is the proba that they fall in each category
+        f_knn_proba = pd.DataFrame({'Leader': f_knn_0_results,
+                            'Task orientatied': f_knn_1_results,
+                            'Maverick': f_knn_2_results,
+                            'Anxious': f_knn_3_results,
+                            'Workaholic': f_knn_4_results})
+        
+        # This is the category they are highest in
+        print(np.argmax(f_knn_proba.values, axis = 1))
     
 else:
     st.text('Here we should see the CNN prediction')
