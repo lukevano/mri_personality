@@ -25,6 +25,7 @@ mlflow
 s3fs
 streamlit
 statsmodels
+openpyxl
 
 # utilities
 six>=1.14
