@@ -24,6 +24,7 @@ google-cloud-storage
 mlflow
 s3fs
 streamlit
+statsmodels
 
 # utilities
 six>=1.14
