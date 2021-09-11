@@ -1,9 +1,12 @@
 from mri_personality.data import clean_data
 from sklearn.preprocessing import StandardScaler
 import streamlit as st
+import numpy as np
 import pandas as pd
 import pickle
 import statsmodels.api as sm
+import plotly.graph_objects as go
+
 
 st.set_page_config(
             page_title="Personality Cortex", # => Quick reference - Streamlit
@@ -23,13 +26,13 @@ st.markdown('No MRI? No problem. First insert your parameters.')
 
 sex= st.selectbox('Insert your sex', ('Male', 'Female'))
 
-age= st.text_input('Insert your age')
+#age= st.text_input('Insert your age')
 
-bmi= st.text_input('Insert your BMI')
+#bmi= st.text_input('Insert your BMI')
 
-hand=st.selectbox('What hand do you use?', ('right', 'left','ambidextrous'))
+#hand=st.selectbox('What hand do you use?', ('right', 'left','ambidextrous'))
 
-education=st.selectbox('Insert your level of education', ('applied', 'academic','medium','high','low'))
+#education=st.selectbox('Insert your level of education', ('applied', 'academic','medium','high','low'))
 
 uploaded_csv=st.file_uploader("Upload the CSV file", type="xlsx")
 
@@ -73,8 +76,9 @@ if uploaded_csv!=None:
     'BrainSegVol-to-eTIV', 'MaskVol', 'rhCortexVol', 'lhCortexVol', 'Left-WM-hypointensities',
     'Right-WM-hypointensities', 'non-WM-hypointensities', 'Left-non-WM-hypointensities',
     'Right-non-WM-hypointensities'],axis=1,inplace=True)
-        uploaded_df=scaler.fit_transform(uploaded_df)
+        uploaded_df=pd.DataFrame(scaler.fit_transform(uploaded_df),columns=uploaded_df.columns)
         uploaded_df=sm.add_constant(uploaded_df)
+        
         m_knn_0_results=m_knn_0.predict(uploaded_df.iloc[4,:].values.T.reshape(1,-1))
         m_knn_1_results=m_knn_1.predict(uploaded_df.iloc[4,:].values.T.reshape(1,-1))
         m_knn_2_results=m_knn_2.predict(uploaded_df.iloc[4,:].values.T.reshape(1,-1))
@@ -87,11 +91,25 @@ if uploaded_csv!=None:
                             'Maverick': m_knn_2_results,
                             'Anxious': m_knn_3_results,
                             'Workaholic': m_knn_4_results})
-        
+        results={'Leader': '....','Task': '....'}
         # This is the category they are highest in
-        print(np.argmax(m_knn_proba.values, axis = 1))
+        'Results per category:',m_knn_proba
+        fig = go.Figure(data=go.Scatterpolar(
+        r=m_knn_proba.values,
+        theta=m_knn_proba.columns.tolist(),
+        fill='toself'))
+        fig.update_layout(
+         polar=dict(
+        radialaxis=dict(
+        visible=True),),
+        showlegend=False)
 
-        st.text(m_knn_0_results)
+        st.plotly_chart(fig)
+        st.text(m_knn_proba.values)
+        st.text(m_knn_proba.columns.tolist())
+        st.text(m_knn_proba.idxmax(axis = 1, skipna = True))
+
+        
         
     if sex == 'Female':
         #uploaded_df=uploaded_df[uploaded_df['sex']=='']
@@ -103,13 +121,13 @@ if uploaded_csv!=None:
     'BrainSegVol-to-eTIV', 'MaskVol', 'rhCortexVol', 'lhCortexVol', 'Left-WM-hypointensities',
     'Right-WM-hypointensities', 'non-WM-hypointensities', 'Left-non-WM-hypointensities',
     'Right-non-WM-hypointensities'],axis=1,inplace=True)
-        uploaded_df=scaler.fit_transform(uploaded_df)
+        uploaded_df=pd.DataFrame(scaler.fit_transform(uploaded_df),columns=uploaded_df.columns)
         uploaded_df=sm.add_constant(uploaded_df)
-        f_knn_0_results=f_knn_0.predict(uploaded_df.iloc[4,:].values.T.reshape(1,-1))
-        f_knn_1_results=f_knn_1.predict(uploaded_df.iloc[4,:].values.T.reshape(1,-1))
-        f_knn_2_results=f_knn_2.predict(uploaded_df.iloc[4,:].values.T.reshape(1,-1))
-        f_knn_3_results=f_knn_3.predict(uploaded_df.iloc[4,:].values.T.reshape(1,-1))
-        f_knn_4_results=f_knn_4.predict(uploaded_df.iloc[4,:].values.T.reshape(1,-1))
+        f_knn_0_results=f_knn_0.predict(uploaded_df.iloc[3,:].values.T.reshape(1,-1))
+        f_knn_1_results=f_knn_1.predict(uploaded_df.iloc[3,:].values.T.reshape(1,-1))
+        f_knn_2_results=f_knn_2.predict(uploaded_df.iloc[3,:].values.T.reshape(1,-1))
+        f_knn_3_results=f_knn_3.predict(uploaded_df.iloc[3,:].values.T.reshape(1,-1))
+        f_knn_4_results=f_knn_4.predict(uploaded_df.iloc[3,:].values.T.reshape(1,-1))
 
         # This is the proba that they fall in each category
         f_knn_proba = pd.DataFrame({'Leader': f_knn_0_results,
@@ -118,8 +136,10 @@ if uploaded_csv!=None:
                             'Anxious': f_knn_3_results,
                             'Workaholic': f_knn_4_results})
         
+        category_dict={'Leader': '....','Task orientatied': '....','Maverick': '....','Anxious': '....','Workaholic': '....'}
         # This is the category they are highest in
-        print(np.argmax(f_knn_proba.values, axis = 1))
+        'Results per category:',m_knn_proba 
+        st.text(m_knn_proba.idxmax(axis = 1, skipna = True))
     
 else:
     st.text('Here we should see the CNN prediction')

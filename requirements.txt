@@ -9,6 +9,7 @@ wheel>=0.29
 numpy
 pandas
 scikit-learn
+plotly
 
 # tests/linter
 black
