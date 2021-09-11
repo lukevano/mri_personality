@@ -1,4 +1,5 @@
 import pandas as pd
+import plotly.express as px
 
 def get_data():
     
@@ -43,6 +44,8 @@ def clean_data(df):
     neo_m = m_df.iloc[:,6:11].reset_index(drop=True)
     
     return X_f, X_m, neo_f, neo_m, sex_df
+
+
 
 if __name__ == '__main__':
     
