@@ -6,6 +6,7 @@ import pandas as pd
 import pickle
 import statsmodels.api as sm
 import plotly.graph_objects as go
+import base64
 
 
 st.set_page_config(
@@ -16,6 +17,26 @@ st.set_page_config(
 '''
 # Personality Cortex
 '''
+def get_base64(bin_file):
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+def set_background(png_file):
+    bin_str = get_base64(png_file)
+    page_bg_img = '''
+    <style>
+.stApp {
+  background-image: url("data:image/png;base64,%s");
+  background-size: cover;
+}
+</style>
+    ''' % bin_str
+    st.markdown(page_bg_img, unsafe_allow_html=True)
+
+set_background('notebooks/cover2.jpeg')
+
+
 st.sidebar.title('LW Batch 602 London')
 st.sidebar.subheader('Christopher Holmes, Francisco Costa, Luke Vano')
 st.sidebar.markdown('Project explores different models to predict big 5 personality types based on brain thickness')
@@ -56,9 +77,6 @@ st.markdown('Do you have an MRI? Upload the **NII image** and see the prediction
 uploaded_image=st.file_uploader("Upload an MRI", type="JPG")
 
 
-
-
-
 st.text('')
 st.text('')
 st.text('')
@@ -82,22 +100,22 @@ if uploaded_csv!=None:
     
     if sex == 'Male':
         #uploaded_df=uploaded_df[uploaded_df['sex']=='']
-        uploaded_df.drop(['participant_id','age','sex','BMI','handedness','education_category','NEO_N','NEO_E','NEO_O','NEO_A',
-                          'NEO_C','eTIV.1', 'EstimatedTotalIntraCranialVol', 'BrainSegVolNotVent.2',
-                         'BrainSegVolNotVent.1', 'BrainSegVolNotVentSurf', 'SupraTentorialVolNotVentVox',
-    'lhCerebralWhiteMatterVol', 'rhCerebralWhiteMatterVol', 'BrainSegVolNotVent.2', 
-    'BrainSegVol', 'SupraTentorialVol', 'SupraTentorialVolNotVent',
-    'BrainSegVol-to-eTIV', 'MaskVol', 'rhCortexVol', 'lhCortexVol', 'Left-WM-hypointensities',
-    'Right-WM-hypointensities', 'non-WM-hypointensities', 'Left-non-WM-hypointensities',
-    'Right-non-WM-hypointensities'],axis=1,inplace=True)
+        #uploaded_df.drop(['participant_id','age','sex','BMI','handedness','education_category','NEO_N','NEO_E','NEO_O','NEO_A',
+         #                 'NEO_C','eTIV.1', 'EstimatedTotalIntraCranialVol', 'BrainSegVolNotVent.2',
+          #               'BrainSegVolNotVent.1', 'BrainSegVolNotVentSurf', 'SupraTentorialVolNotVentVox',
+    #'lhCerebralWhiteMatterVol', 'rhCerebralWhiteMatterVol', 'BrainSegVolNotVent.2', 
+    #'BrainSegVol', 'SupraTentorialVol', 'SupraTentorialVolNotVent',
+    #'BrainSegVol-to-eTIV', 'MaskVol', 'rhCortexVol', 'lhCortexVol', 'Left-WM-hypointensities',
+    #'Right-WM-hypointensities', 'non-WM-hypointensities', 'Left-non-WM-hypointensities',
+    #'Right-non-WM-hypointensities'],axis=1,inplace=True)
         uploaded_df=pd.DataFrame(scaler.fit_transform(uploaded_df),columns=uploaded_df.columns)
         uploaded_df=sm.add_constant(uploaded_df)
         
-        m_knn_0_results=m_knn_0.predict(uploaded_df.iloc[4,:].values.T.reshape(1,-1))
-        m_knn_1_results=m_knn_1.predict(uploaded_df.iloc[4,:].values.T.reshape(1,-1))
-        m_knn_2_results=m_knn_2.predict(uploaded_df.iloc[4,:].values.T.reshape(1,-1))
-        m_knn_3_results=m_knn_3.predict(uploaded_df.iloc[4,:].values.T.reshape(1,-1))
-        m_knn_4_results=m_knn_4.predict(uploaded_df.iloc[4,:].values.T.reshape(1,-1))
+        m_knn_0_results=m_knn_0.predict(uploaded_df.values.T.reshape(1,-1))
+        m_knn_1_results=m_knn_1.predict(uploaded_df.values.T.reshape(1,-1))
+        m_knn_2_results=m_knn_2.predict(uploaded_df.values.T.reshape(1,-1))
+        m_knn_3_results=m_knn_3.predict(uploaded_df.values.T.reshape(1,-1))
+        m_knn_4_results=m_knn_4.predict(uploaded_df.values.T.reshape(1,-1))
         
         # This is the proba that they fall in each category
         m_knn_proba = pd.DataFrame({'Leader': m_knn_0_results,
@@ -126,14 +144,14 @@ if uploaded_csv!=None:
         
     if sex == 'Female':
         #uploaded_df=uploaded_df[uploaded_df['sex']=='']
-        uploaded_df.drop(['participant_id','age','sex','BMI','handedness','education_category','NEO_N','NEO_E','NEO_O','NEO_A',
-                          'NEO_C','eTIV.1', 'EstimatedTotalIntraCranialVol', 'BrainSegVolNotVent.2',
-                         'BrainSegVolNotVent.1', 'BrainSegVolNotVentSurf', 'SupraTentorialVolNotVentVox',
-    'lhCerebralWhiteMatterVol', 'rhCerebralWhiteMatterVol', 'BrainSegVolNotVent.2', 
-    'BrainSegVol', 'SupraTentorialVol', 'SupraTentorialVolNotVent',
-    'BrainSegVol-to-eTIV', 'MaskVol', 'rhCortexVol', 'lhCortexVol', 'Left-WM-hypointensities',
-    'Right-WM-hypointensities', 'non-WM-hypointensities', 'Left-non-WM-hypointensities',
-    'Right-non-WM-hypointensities'],axis=1,inplace=True)
+        #uploaded_df.drop(['participant_id','age','sex','BMI','handedness','education_category','NEO_N','NEO_E','NEO_O','NEO_A',
+        #                  'NEO_C','eTIV.1', 'EstimatedTotalIntraCranialVol', 'BrainSegVolNotVent.2',
+         #                'BrainSegVolNotVent.1', 'BrainSegVolNotVentSurf', 'SupraTentorialVolNotVentVox',
+    #'lhCerebralWhiteMatterVol', 'rhCerebralWhiteMatterVol', 'BrainSegVolNotVent.2', 
+    #'BrainSegVol', 'SupraTentorialVol', 'SupraTentorialVolNotVent',
+    #'BrainSegVol-to-eTIV', 'MaskVol', 'rhCortexVol', 'lhCortexVol', 'Left-WM-hypointensities',
+    #'Right-WM-hypointensities', 'non-WM-hypointensities', 'Left-non-WM-hypointensities',
+    #'Right-non-WM-hypointensities'],axis=1,inplace=True)
         uploaded_df=pd.DataFrame(scaler.fit_transform(uploaded_df),columns=uploaded_df.columns)
         uploaded_df=sm.add_constant(uploaded_df)
         f_knn_0_results=f_knn_0.predict(uploaded_df.iloc[0,:].values.T.reshape(1,-1))
@@ -179,14 +197,14 @@ elif uploaded_image!=None:
     
     if sex == 'Male':
         #uploaded_df=uploaded_df[uploaded_df['sex']=='']
-        uploaded_df.drop(['participant_id','age','sex','BMI','handedness','education_category','NEO_N','NEO_E','NEO_O','NEO_A',
-                          'NEO_C','eTIV.1', 'EstimatedTotalIntraCranialVol', 'BrainSegVolNotVent.2',
-                         'BrainSegVolNotVent.1', 'BrainSegVolNotVentSurf', 'SupraTentorialVolNotVentVox',
-    'lhCerebralWhiteMatterVol', 'rhCerebralWhiteMatterVol', 'BrainSegVolNotVent.2', 
-    'BrainSegVol', 'SupraTentorialVol', 'SupraTentorialVolNotVent',
-    'BrainSegVol-to-eTIV', 'MaskVol', 'rhCortexVol', 'lhCortexVol', 'Left-WM-hypointensities',
-    'Right-WM-hypointensities', 'non-WM-hypointensities', 'Left-non-WM-hypointensities',
-    'Right-non-WM-hypointensities'],axis=1,inplace=True)
+        #uploaded_df.drop(['participant_id','age','sex','BMI','handedness','education_category','NEO_N','NEO_E','NEO_O','NEO_A',
+        #                  'NEO_C','eTIV.1', 'EstimatedTotalIntraCranialVol', 'BrainSegVolNotVent.2',
+         #                'BrainSegVolNotVent.1', 'BrainSegVolNotVentSurf', 'SupraTentorialVolNotVentVox',
+    #'lhCerebralWhiteMatterVol', 'rhCerebralWhiteMatterVol', 'BrainSegVolNotVent.2', 
+    #'BrainSegVol', 'SupraTentorialVol', 'SupraTentorialVolNotVent',
+    #'BrainSegVol-to-eTIV', 'MaskVol', 'rhCortexVol', 'lhCortexVol', 'Left-WM-hypointensities',
+    #'Right-WM-hypointensities', 'non-WM-hypointensities', 'Left-non-WM-hypointensities',
+    #'Right-non-WM-hypointensities'],axis=1,inplace=True)
         uploaded_df=pd.DataFrame(scaler.fit_transform(uploaded_df),columns=uploaded_df.columns)
         uploaded_df=sm.add_constant(uploaded_df)
         

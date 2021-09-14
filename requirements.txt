@@ -10,6 +10,8 @@ numpy
 pandas
 scikit-learn
 plotly
+statsmodels
+openpyxl
 
 # tests/linter
 black
@@ -24,8 +26,7 @@ google-cloud-storage
 mlflow
 s3fs
 streamlit
-statsmodels
-openpyxl
+
 
 # utilities
 six>=1.14
