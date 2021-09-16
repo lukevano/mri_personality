@@ -57,7 +57,9 @@ st.sidebar.markdown(source_link, unsafe_allow_html=True)
 python_link = '[NeuroImg - Python](https://nipy.org/nibabel/reference/nibabel.freesurfer.html#nibabel.freesurfer.io.read_geometry/)'
 st.sidebar.markdown('Library for neuro imaging files:')
 st.sidebar.markdown(python_link, unsafe_allow_html=True)
-
+keras_link = '[Keras - 3D Image Classification](https://keras.io/examples/vision/3D_image_classification/)'
+st.sidebar.markdown('Code example for 3D Images from Keras:')
+st.sidebar.markdown(keras_link, unsafe_allow_html=True)
 
 st.text('Curious about what type of personality do you have?')
 
@@ -123,7 +125,11 @@ if uploaded_csv!=None:
                             'Maverick': m_knn_2_results,
                             'Anxious': m_knn_3_results,
                             'Workaholic': m_knn_4_results})
-        results={'Leader': '....','Task oriented': '....','Maverick': '....','Anxious':'...','Workaholic':'...'}
+        results={'Leader': 'You are levelheaded in the face of adversity. You are openminded and can think outside the box. When working in a team you get on well with others. You are organised and like to be around others'
+                 ,'Task oriented': 'You are extremely calm, cool, and collected. Like to be around others but sometimes find it difficult to see their point of view. You are very closeminded and like to stick to a plan or structure rather than thinking outside of the box.'
+                 ,'Maverick': 'You play by your own rules and don’t care what others think about you. When completing tasks you find it difficult to be organised but are able to rise to unforeseen challenges. You are passionate but sometimes your emotions make it difficult for you to think clearly.'
+                 ,'Anxious':'You are stressed most of the time and prefer your own company than being with others. When working with others you often let others take charge and find it difficult to get your point across.'
+                 ,'Workaholic':'Are hardworking but aloof, finding it difficult to take on board other people’s point of view. You are a perfectionist who finds it difficult to break the rules.'}
         # This is the category they are highest in
         
         fig = go.Figure(data=go.Scatterpolar(
@@ -138,7 +144,7 @@ if uploaded_csv!=None:
 
         st.plotly_chart(fig)
         
-        st.text(results[m_knn_proba.idxmax(axis = 1, skipna = True).values[0]])
+        st.markdown(results[m_knn_proba.idxmax(axis = 1, skipna = True).values[0]])
 
         
         
@@ -166,7 +172,11 @@ if uploaded_csv!=None:
                             'Maverick': f_knn_2_results,
                             'Anxious': f_knn_3_results,
                             'Workaholic': f_knn_4_results})
-        results={'Leader': '....','Task oriented': '....','Maverick': '....','Anxious':'...','Workaholic':'...'}
+        results={'Leader': 'You are levelheaded in the face of adversity. You are openminded and can think outside the box. When working in a team you get on well with others. You are organised and like to be around others'
+                 ,'Task oriented': 'You are extremely calm, cool, and collected. Like to be around others but sometimes find it difficult to see their point of view. You are very closeminded and like to stick to a plan or structure rather than thinking outside of the box.'
+                 ,'Maverick': 'You play by your own rules and don’t care what others think about you. When completing tasks you find it difficult to be organised but are able to rise to unforeseen challenges. You are passionate but sometimes your emotions make it difficult for you to think clearly.'
+                 ,'Anxious':'You are stressed most of the time and prefer your own company than being with others. When working with others you often let others take charge and find it difficult to get your point across.'
+                 ,'Workaholic':'Are hardworking but aloof, finding it difficult to take on board other people’s point of view. You are a perfectionist who finds it difficult to break the rules.'}
         # This is the proba that they fall in each category
         fig = go.Figure(data=go.Scatterpolar(
         r=f_knn_proba.values[0],
@@ -180,7 +190,7 @@ if uploaded_csv!=None:
 
         st.plotly_chart(fig)
         
-        st.text(results[f_knn_proba.idxmax(axis = 1, skipna = True).values[0]])
+        st.markdown(results[f_knn_proba.idxmax(axis = 1, skipna = True).values[0]])
     
 elif uploaded_image!=None:
     f_knn_0=pickle.load(open('mri_personality/f_knn_0.pickle', 'rb'))
@@ -197,14 +207,14 @@ elif uploaded_image!=None:
     
     if sex == 'Male':
         #uploaded_df=uploaded_df[uploaded_df['sex']=='']
-        #uploaded_df.drop(['participant_id','age','sex','BMI','handedness','education_category','NEO_N','NEO_E','NEO_O','NEO_A',
-        #                  'NEO_C','eTIV.1', 'EstimatedTotalIntraCranialVol', 'BrainSegVolNotVent.2',
-         #                'BrainSegVolNotVent.1', 'BrainSegVolNotVentSurf', 'SupraTentorialVolNotVentVox',
-    #'lhCerebralWhiteMatterVol', 'rhCerebralWhiteMatterVol', 'BrainSegVolNotVent.2', 
-    #'BrainSegVol', 'SupraTentorialVol', 'SupraTentorialVolNotVent',
-    #'BrainSegVol-to-eTIV', 'MaskVol', 'rhCortexVol', 'lhCortexVol', 'Left-WM-hypointensities',
-    #'Right-WM-hypointensities', 'non-WM-hypointensities', 'Left-non-WM-hypointensities',
-    #'Right-non-WM-hypointensities'],axis=1,inplace=True)
+        uploaded_df.drop(['participant_id','age','sex','BMI','handedness','education_category','NEO_N','NEO_E','NEO_O','NEO_A',
+                          'NEO_C','eTIV.1', 'EstimatedTotalIntraCranialVol', 'BrainSegVolNotVent.2',
+                         'BrainSegVolNotVent.1', 'BrainSegVolNotVentSurf', 'SupraTentorialVolNotVentVox',
+    'lhCerebralWhiteMatterVol', 'rhCerebralWhiteMatterVol', 'BrainSegVolNotVent.2', 
+    'BrainSegVol', 'SupraTentorialVol', 'SupraTentorialVolNotVent',
+    'BrainSegVol-to-eTIV', 'MaskVol', 'rhCortexVol', 'lhCortexVol', 'Left-WM-hypointensities',
+    'Right-WM-hypointensities', 'non-WM-hypointensities', 'Left-non-WM-hypointensities',
+    'Right-non-WM-hypointensities'],axis=1,inplace=True)
         uploaded_df=pd.DataFrame(scaler.fit_transform(uploaded_df),columns=uploaded_df.columns)
         uploaded_df=sm.add_constant(uploaded_df)
         
@@ -220,7 +230,11 @@ elif uploaded_image!=None:
                             'Maverick': m_knn_2_results,
                             'Anxious': m_knn_3_results,
                             'Workaholic': m_knn_4_results})
-        results={'Leader': '....','Task oriented': '....','Maverick': '....','Anxious':'...','Workaholic':'...'}
+        results={'Leader': 'You are levelheaded in the face of adversity. You are openminded and can think outside the box. When working in a team you get on well with others. You are organised and like to be around others'
+                 ,'Task oriented': 'You are extremely calm, cool, and collected. Like to be around others but sometimes find it difficult to see their point of view. You are very closeminded and like to stick to a plan or structure rather than thinking outside of the box.'
+                 ,'Maverick': 'You play by your own rules and don’t care what others think about you. When completing tasks you find it difficult to be organised but are able to rise to unforeseen challenges. You are passionate but sometimes your emotions make it difficult for you to think clearly.'
+                 ,'Anxious':'You are stressed most of the time and prefer your own company than being with others. When working with others you often let others take charge and find it difficult to get your point across.'
+                 ,'Workaholic':'Are hardworking but aloof, finding it difficult to take on board other people’s point of view. You are a perfectionist who finds it difficult to break the rules.'}
         # This is the category they are highest in
         
         fig = go.Figure(data=go.Scatterpolar(
@@ -235,7 +249,7 @@ elif uploaded_image!=None:
 
         st.plotly_chart(fig)
         
-        st.text(results[m_knn_proba.idxmax(axis = 1, skipna = True).values[0]])
+        st.markdown(results[m_knn_proba.idxmax(axis = 1, skipna = True).values[0]])
 
         
         
@@ -263,7 +277,11 @@ elif uploaded_image!=None:
                             'Maverick': f_knn_2_results,
                             'Anxious': f_knn_3_results,
                             'Workaholic': f_knn_4_results})
-        results={'Leader': '....','Task oriented': '....','Maverick': '....','Anxious':'...','Workaholic':'...'}
+        results={'Leader': 'You are levelheaded in the face of adversity. You are openminded and can think outside the box. When working in a team you get on well with others. You are organised and like to be around others'
+                 ,'Task oriented': 'You are extremely calm, cool, and collected. Like to be around others but sometimes find it difficult to see their point of view. You are very closeminded and like to stick to a plan or structure rather than thinking outside of the box.'
+                 ,'Maverick': 'You play by your own rules and don’t care what others think about you. When completing tasks you find it difficult to be organised but are able to rise to unforeseen challenges. You are passionate but sometimes your emotions make it difficult for you to think clearly.'
+                 ,'Anxious':'You are stressed most of the time and prefer your own company than being with others. When working with others you often let others take charge and find it difficult to get your point across.'
+                 ,'Workaholic':'Are hardworking but aloof, finding it difficult to take on board other people’s point of view. You are a perfectionist who finds it difficult to break the rules.'}
         # This is the proba that they fall in each category
         fig = go.Figure(data=go.Scatterpolar(
         r=f_knn_proba.values[0],
@@ -277,7 +295,7 @@ elif uploaded_image!=None:
 
         st.plotly_chart(fig)
         
-        st.text(results[f_knn_proba.idxmax(axis = 1, skipna = True).values[0]])
+        st.markdown(results[f_knn_proba.idxmax(axis = 1, skipna = True).values[0]])
     
 
 
