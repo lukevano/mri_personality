@@ -139,9 +139,9 @@ if uploaded_csv!=None:
         fig.update_layout(
          polar=dict(
         radialaxis=dict(
-        visible=True),),
+        visible=False),),
         showlegend=False)
-
+        
         st.plotly_chart(fig)
         
         st.markdown(results[m_knn_proba.idxmax(axis = 1, skipna = True).values[0]])
@@ -185,7 +185,7 @@ if uploaded_csv!=None:
         fig.update_layout(
          polar=dict(
         radialaxis=dict(
-        visible=True),),
+        visible=False),),
         showlegend=False)
 
         st.plotly_chart(fig)
@@ -244,7 +244,7 @@ elif uploaded_image!=None:
         fig.update_layout(
          polar=dict(
         radialaxis=dict(
-        visible=True),),
+        visible=False),),
         showlegend=False)
 
         st.plotly_chart(fig)
@@ -290,7 +290,7 @@ elif uploaded_image!=None:
         fig.update_layout(
          polar=dict(
         radialaxis=dict(
-        visible=True),),
+        visible=False),),
         showlegend=False)
 
         st.plotly_chart(fig)
