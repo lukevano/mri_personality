@@ -24,7 +24,7 @@ This project was created during the final weeks of the 25-week part-time Data Sc
 
 The rest of this file details the steps we took to initialise the project.
 
-# Starting up the project
+## Starting up the project
 
 The initial setup.
 
@@ -62,7 +62,7 @@ cd tmp
 mri_personality-run
 ```
 
-# Install
+## Install
 
 Go to `https://github.com/{group}/mri_personality` to see the project, manage issues,
 setup you ssh public key, ...
